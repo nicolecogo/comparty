@@ -1,14 +1,26 @@
 const express = require('express');
-const app = express();
-const router = express.Router();
+const session = require('express-session');
+const passport = require('passport');
 
+const router = require('./router');
+
+const SERVER_URL = process.env.SERVER_BASE_URL || 'http://localhost';
 const PORT = process.env.PORT || 3001;
+const app = express();
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>');
-})
+app.use(express.json());
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+  //TODO change to secure http connection
+  //cookie: { secure: true }
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(router);
 
 app.listen(PORT, (err) => {
   if (err) console.log(err);
-  else console.log(`Server listening at http://localhost:${PORT}`);
+  else console.log(`Server listening at ${SERVER_URL}:${PORT}`);
 });

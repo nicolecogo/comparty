@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./server/index.js",
+    "start": "node -r dotenv/config ./server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/nicolecogo/comparty/issues"
   },
-  "homepage": "https://github.com/nicolecogo/comparty#readme"
+  "homepage": "https://github.com/nicolecogo/comparty#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
 }
