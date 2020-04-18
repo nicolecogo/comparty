@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
+const cors = require('cors');
 
 const router = require('./router');
 
@@ -8,6 +9,7 @@ const SERVER_URL = process.env.SERVER_BASE_URL || 'http://localhost';
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(session({
   secret: 'keyboard cat',
