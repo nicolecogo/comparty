@@ -1,19 +1,12 @@
 import React from 'react';
-import SpotifyClient from '../services/SpotifyClient.js';
+import Player from '../components/Player';
+import Playlist from '../components/Playlist';
 
 function PlayerTab () {
-
-  function handleClick () {
-    const token = localStorage.getItem('token');
-    console.log(token);
-    SpotifyClient.getFeaturedPlaylists(token)
-      .then(res => console.log(res));
-  }
-
   return (
     <div className="PlayerTab">
-      Player tab
-      <button onClick={() => handleClick()}>getPlaylist</button>
+      <Player />
+      <Playlist />
     </div>
   );
 }

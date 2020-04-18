@@ -1,3 +1,12 @@
+.Homepage {
+  width: 100vw;
+}
+
+.Homepage .homepage-main {
+  margin: 50vh auto auto 200px;
+  width: fit-content;
+}
+
 .UserPage {
   display: flex;
   flex-direction: row;
@@ -5,11 +14,144 @@
 }
 
 .MeetingRoom {
-  flex: 5;
+  background-color: var(--primary-lightcolor1);
+  height: 100vh;
+  flex: 3;
   min-width: 600px;
 }
 
+.MeetingRoom .meetingroom-main {
+  margin: 50vh auto auto 200px;
+  width: fit-content;
+}
+
 .PlayerTab {
+  background-color: var(--primary-lightcolor2);
+  height: 100vh;
   flex: 2;
   min-width: 400px;
+  padding: 20px 50px;
+}
+
+.Player {
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+
+}
+
+.Player .controls {
+  display: flex;
+  margin: 50px auto;
+  height: fit-content;
+}
+
+.Player .button {
+  border: 0px;
+  width: 65px;
+  height: 65px;
+  margin: 15px;
+  border-radius: 65px;
+  background-color: var(--accent-color1);
+  color: var(--primary-lightcolor1);
+}
+
+.Playlist {
+  overflow: auto;
+  height: 65vh;
+  min-height: 500px;
+}
+
+.Track {
+  padding: 10px;
+  margin: 5px;
+  box-shadow: 0px 1px 0px 0px var(--primary-lightcolor3);
+  display: flex;
+  justify-content: space-between;
+}
+
+.Track .button {
+  visibility: hidden;
+}
+
+.Track:hover .button {
+  visibility: visible;
+  border: 0px;
+  width: 20px;
+  height: 20px;
+  border-radius: 25px;
+  background-color: var(--primary-darkcolor1);
+  color: var(--primary-lightcolor1);
+}
+
+.Track .button:hover {
+  box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
+}
+
+.UtilitiesTab { 
+  height: 100vh;
+  flex: 1;
+  min-width: 200px;
+}
+
+.Search {
+  background-color: var(--primary-darkcolor1);
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Search .button {
+  border: 0px;
+  width: 65px;
+  height: 65px;
+  margin: 15px;
+  border-radius: 65px;
+  background-color: transparent;
+  color: var(--primary-lightcolor1);
+  font-size: 26px;
+}
+
+.Search:hover .button {
+  animation: search-btn 0.2s forwards;
+}
+
+@keyframes search-btn {
+  to {
+    background-color: var(--primary-lightcolor3);
+    color: var(--primary-darkcolor1);
+    box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
+  }
+}
+
+.Options {
+  background-color: var(--accent-color1);
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.Options .button {
+  border: 0px;
+  width: 65px;
+  height: 65px;
+  margin: 15px;
+  border-radius: 65px;
+  background-color: var(--primary-lightcolor2);
+  color: var(--primary-darkcolor1);
+  font-size: 26px;
+}
+
+.button:hover {
+  animation: btn 0.2s forwards;
+}
+
+@keyframes btn {
+  to {
+    box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
+  }
 }

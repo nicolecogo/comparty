@@ -1,3 +1,13 @@
+:root {
+  --primary-lightcolor1: white;
+  --primary-lightcolor2: #EDF4F8;
+  --primary-lightcolor3: #99B0B9;
+  --primary-darkcolor1: #2C2B32;
+  --accent-color1: #F64945;
+  --accent-color2: #B7E3E1;
+  --accent-color3: #F8AA37;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
