@@ -1,0 +1,15 @@
+.UserPage {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.MeetingRoom {
+  flex: 5;
+  min-width: 600px;
+}
+
+.PlayerTab {
+  flex: 2;
+  min-width: 400px;
+}
