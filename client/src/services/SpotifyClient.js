@@ -9,6 +9,72 @@ class SpotifyClient {
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
 
+  static async getUserPlaylists (token) {
+    const method = 'GET';
+    const endpoint = '/me/playlists';
+    const body = null;
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
+  static async findSong (token, searchWords) {
+    if(!searchWords) return new Promise.reject('No search words provided');
+    const method = 'GET';
+    const endpoint = '/search';
+    const body = {
+      q: encodeURI(searchWords),
+      type: 'album,artist,track',
+      market: 'from_token'
+    };
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
+  static async createDefaultPlaylist (token, userId) {
+    if(!userId) return new Promise.reject('No user id provided');
+    this.createPlaylist(token, userId, 'Comparty::playlist');
+  }
+
+  static async createPlaylist (token, userId, name) {
+    if(!userId) return new Promise.reject('No user id provided');
+    if(!name) return new Promise.reject('No name provided');
+    const method = 'GET';
+    const endpoint = `/users/${userId}/playlists`;
+    const body = {
+      name,
+      public: false,
+      collaborative: false,
+      description: 'Listen together with your friends with Comparty (automatically created by Comparty)'
+    };
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
+  static async addSongToPlaylist (token, playlistId, songURI) {
+    if(!playlistId) return new Promise.reject('No playlist id provided');
+    if(!songURI) return new Promise.reject('No song URI provided');
+    const method = 'POST';
+    const endpoint = `/playlists/${playlistId}/tracks`;
+    const body = {
+      uris: ['spotify:track:' + songURI]
+    };
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
+  static async removeSongFromPlaylist (token, playlistId, songURI, songPosition, snapshotId) {
+    if(!playlistId) return new Promise.reject('No playlist id provided');
+    if(!songURI) return new Promise.reject('No song URI provided');
+    if(!songPosition) return new Promise.reject('No song position provided');
+    if(!snapshotId) return new Promise.reject('No snapshotId provided');
+    const method = 'DELETE';
+    const endpoint = `/playlists/${playlistId}/tracks`;
+    const body = {
+      tracks: [{
+        uri: 'spotify:track:' + songURI,
+        positions: [songPosition]
+      }],
+      snapshot_id: snapshotId
+    };
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
   static async fetchFromSpotify (method, endpoint, token, body) {
     const url = `${this.BASE_URL}${endpoint}`;
     const options = {
