@@ -1,46 +1,36 @@
-import React from 'react';
+import React, { useEffect }  from 'react';
 import Track from './Track';
-// import SpotifyClient from '../services/SpotifyClient';
+import SpotifyClient from '../services/SpotifyClient';
+import { useAuth } from '../context/auth';
+import { useUser } from '../context/user';
 
 function Playlist () {
 
-  // function showPlaylist () {
-  //   const token = localStorage.getItem('token');
-  //   console.log(token);
-  //   return SpotifyClient.getFeaturedPlaylists(token)
-  //     .then(res => res);
-  // }
-  const playlist = [
-    'HIGHEST IN THE ROOM, Travis Scott',
-    'EARFQUAKE, Tyler, The Creator',
-    'Toosie Slide, Drake',
-    'The Take (feat. Chris Brown), Tory Lanez',
-    'Going Bad (feat. Drake), Meek Mill',
-    'Suge, DaBaby',
-    'Noticed, Lil Mosey',
-    'ORANGE SODA, Baby Keem',
-    'Praise The Lord (Da Shine) (feat. Skepta), A$AP Rocky',
-    'BEST ON EARTH (feat. BIA) - Bonus, Russ',
-    'Blue World, Mac Miller',
-    'Somebody, Internet Money',
-    'Tap (feat. Meek Mill), NAV',
-    'G Walk (with Chris Brown), Lil Mosey',
-    'Summertime In Paris, Jaden',
-    'Heat (feat. Gunna), Chris Brown',
-    'Racks in the Middle (feat. Roddy Ricch and Hit-Boy), Nipsey Hussle',
-    'Love Me More, Trippie Redd',
-    '90210 (feat. Kacy Hill), Travis Scott',
-    '100 Degrees, Rich Brian',
-    'Caught Up (feat. Khalid), Majid Jordan',
-    'BIG, Young M.A',
-    'I Think I Luv Her, Tyla Yaweh'
-  ];
+  const { authToken } = useAuth();
+  const { authUser, setAuthUser } = useUser();
+  const playlist = authUser.playlist.songs;
+  
+  useEffect(() => {
+    //TODO retrieve playlists to choose from or save unique app playlist
+    const playlistId = '2OfUhsiHw4zEWrweZqHpkW';
+    SpotifyClient.getPlaylistSongs(authToken, playlistId)
+      .then(res => {
+        console.log(res);
+        setAuthUser(user => ( { ...user, playlist: {playlistId, songs: res} } ));
+      })
+      .catch(err => {
+        //TODO check if token expired or playlist deleted
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div className="Playlist">
-      {playlist.map(track =>
-        (<Track track={track}/>)
-      )}
+      {
+        playlist
+        ? playlist.map(track => (<Track key={track.id} track={track}/>))
+        : <h3>No playlist selected</h3>
+      }
     </div>
   );
 }

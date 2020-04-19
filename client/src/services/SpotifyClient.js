@@ -1,3 +1,5 @@
+import SpotifyParser from './SpotifyParser';
+
 class SpotifyClient {
 
   static BASE_URL = 'https://api.spotify.com/v1';
@@ -14,6 +16,16 @@ class SpotifyClient {
     const endpoint = '/me/playlists';
     const body = null;
     return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
+  static async getPlaylistSongs (token, playlistId) {
+    if(!playlistId) return new Promise.reject('No playlist id provided');
+    const method = 'GET';
+    const endpoint = `/playlists/${playlistId}/tracks`;
+    const params = '?fields=track&market=from_token';
+    const body = null;
+    const playlist =  await this.fetchFromSpotify(method, endpoint, token, body);
+    return SpotifyParser.extractSongs(playlist);
   }
 
   static async findSong (token, searchWords) {
@@ -62,7 +74,7 @@ class SpotifyClient {
     if(!playlistId) return new Promise.reject('No playlist id provided');
     if(!songURI) return new Promise.reject('No song URI provided');
     if(!songPosition) return new Promise.reject('No song position provided');
-    if(!snapshotId) return new Promise.reject('No snapshotId provided');
+    if(!snapshotId) return new Promise.reject('No snapshot id provided');
     const method = 'DELETE';
     const endpoint = `/playlists/${playlistId}/tracks`;
     const body = {
@@ -74,11 +86,22 @@ class SpotifyClient {
     };
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
+  
+  static async startPlayback (token, deviceId, spotifyURI) {
+    if(!deviceId) return Promise.reject('No device id provided');
+    if(!spotifyURI) return Promise.reject('No spotify URI provided');
+    const method = 'PUT';
+    const endpoint = `/me/player/play?device_id=${deviceId}`;
+    const body = {
+      uris: [spotifyURI]
+    };
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
 
   static async fetchFromSpotify (method, endpoint, token, body) {
     const url = `${this.BASE_URL}${endpoint}`;
     const options = {
-      method: 'GET',
+      method,
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
