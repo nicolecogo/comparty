@@ -4,8 +4,21 @@ const authorization = require('./services/authorization');
 const User = require('./controllers/user');
 const SpotifyAPI = require('./services/spotifyAPI');
 
-router.get('/login', authorization.authenticate('spotify'));
-router.get('/login/callback', authorization.authenticate('spotify', { failureRedirect: '/' }), User.authenticate);
+router.get('/login', authorization.authenticate('spotify', {
+            scope: ['user-read-email',
+            'user-read-private',
+            'user-read-playback-state',
+            'user-modify-playback-state',
+            'user-read-currently-playing',
+            'streaming',
+            'app-remote-control',
+            'playlist-read-collaborative',
+            'playlist-read-private',
+            'playlist-modify-private']    
+          }));
+              
+router.get('/login/callback', authorization.authenticate('spotify', {
+              failureRedirect: '/' }), User.authenticate);
 
 router.get('/browse/discover', ensureAuthenticated, SpotifyAPI.discoverSongs);
 router.get('/browse/find', ensureAuthenticated, SpotifyAPI.findSong);
