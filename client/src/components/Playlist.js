@@ -15,7 +15,6 @@ function Playlist () {
     const playlistId = '2OfUhsiHw4zEWrweZqHpkW';
     SpotifyClient.getPlaylistSongs(authToken, playlistId)
       .then(res => {
-        console.log(res);
         setAuthUser(user => ( { ...user, playlist: {playlistId, songs: res} } ));
       })
       .catch(err => {

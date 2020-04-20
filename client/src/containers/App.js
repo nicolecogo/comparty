@@ -13,7 +13,11 @@ function App() {
   const token = localStorage.getItem('token');
   const [authToken, setAuthToken] = useState(token);
   const userId = localStorage.getItem('user');
-  const [authUser, setAuthUser] = useState({ userId, playlist: {}, player: {} });
+  const [authUser, setAuthUser] = useState(
+    { userId,
+      playlist: { playlistId: null, songs: [] },
+      player: { ready: false, deviceId: null, player: null, status: { playing: false, currentTrack: null, playbackList: [] } }
+    });
 
   return (
     <div className="Container">
