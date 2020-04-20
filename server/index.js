@@ -17,7 +17,7 @@ app.use(session({
   saveUninitialized: true
   //TODO change to secure http connection
   //cookie: { secure: true }
-}))
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(router);
