@@ -10,7 +10,7 @@ function Player () {
 
   const { authToken } = useAuth();
   const { authUser, setAuthUser } = useUser();
-  const { play, pause, resume, next, previous } = usePlayer();
+  const { play, pause, resume, next, previous, getPlayback } = usePlayer();
   
   // Spotify Web Player (allows playing on the browser)
   useScript('https://sdk.scdn.co/spotify-player.js');
@@ -34,7 +34,7 @@ function Player () {
         <button className="button" onClick={() => { next() }}>{nextIcon}</button>
       </div>
       <div className="info">
-        { authUser.player.status.playing
+        { authUser.player.status.currentTrack
           ? <h3>{`${authUser.player.status.currentTrack.name} - ${authUser.player.status.currentTrack.artists}`}</h3>
           : null
         }
@@ -75,9 +75,19 @@ function Player () {
         // Playback status updates
         player.addListener('player_state_changed', state => {
           //TODO trigger socket comunication
-          console.log('player_state_changed', state);
-          const track = state.track_window.current_track;
-          setAuthUser(state => ({ ...state, player: { ...state.player, status: { ...state.player.status, currentTrack: track } }}));
+          getPlayback(player)
+            .then(playback => {
+              setAuthUser(state => ({ ...state, player: 
+                { ...state.player,
+                  status: {
+                    ...state.player.status,
+                    progress: playback.progress,
+                    playing: playback.playing,
+                    currentTrack: playback.currentTrack
+                  }
+                }
+              }));
+            });
         });
         // Ready
         player.addListener('ready', ({ device_id }) => {

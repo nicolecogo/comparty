@@ -11,8 +11,10 @@ function Track ({track}) {
 
   const playIcon = <FontAwesomeIcon icon={faPlay} />
   const pauseIcon = <FontAwesomeIcon icon={faPause} />
+  const currentClass =  authUser.player.status.playing
+    && authUser.player.status.currentTrack.id === track.id ? 'current' : '';
   return (
-    <div className="Track">
+    <div className={"Track " + currentClass}>
       <h4>{`${track.name} - ${track.artists}`}</h4>
       {
         authUser.player.status.playing && (authUser.player.status.currentTrack.id === track.id)

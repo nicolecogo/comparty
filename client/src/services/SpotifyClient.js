@@ -87,6 +87,56 @@ class SpotifyClient {
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
 
+  static async getPlayback (token, deviceId) {
+    if(!deviceId) return Promise.reject('No device id provided');
+    const method = 'GET';
+    const endpoint = `/me/player`;
+    let body = null;
+    const playback = await this.fetchFromSpotify(method, endpoint, token, body);
+    if(!playback) return null;
+    return SpotifyParser.extractPlayback(playback);
+  }
+
+  static async startPlayback (token, deviceId, songsURIs, songURI, position) {
+    if(!deviceId) return Promise.reject('No device id provided');
+    const method = 'PUT';
+    const endpoint = `/me/player/play?device_id=${deviceId}`;
+    let body = null;
+    if(!songURI) songURI = songsURIs[0];
+    if(songsURIs && songsURIs[0]) {
+      body = {
+        uris: songsURIs,
+        offset: {uri: songURI}
+      };
+    }
+    if(position) body.position_ms = position;
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+  
+  static async pausePlayback (token, deviceId) {
+    if(!deviceId) return Promise.reject('No device id provided');
+    const method = 'PUT';
+    const endpoint = `/me/player/pause`;
+    let body = null;
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+  
+  static async skipPlaybackNext (token, deviceId) {
+    if(!deviceId) return Promise.reject('No device id provided');
+    const method = 'POST';
+    const endpoint = `/me/player/next`;
+    let body = null;
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+  
+  static async skipPlaybackPrev (token, deviceId) {
+    if(!deviceId) return Promise.reject('No device id provided');
+    const method = 'POST';
+    const endpoint = `/me/player/previous`;
+    let body = null;
+    return await this.fetchFromSpotify(method, endpoint, token, body);
+  }
+
   static async fetchFromSpotify (method, endpoint, token, body) {
     const url = `${this.BASE_URL}${endpoint}`;
     const options = {

@@ -4,72 +4,75 @@ import Playlist from '../components/Playlist';
 import { PlayerContext } from '../context/player';
 import { useAuth } from '../context/auth';
 import { useUser } from '../context/user';
-import SpotifyPlayerClient from '../services/SpotifyPlayerClient';
+import SpotifyClient from '../services/SpotifyClient';
 
 function PlayerTab () {
 
   const { authToken } = useAuth();
-  const { authUser, setAuthUser } = useUser();
+  const { authUser } = useUser();
 
   function play (songs) {
-    console.log('Play:', songs[0].name);
+    const song = songs[0];
+    if(songs.length <= 1) {
+      songs = authUser.playlist.songs;
+    }
     const songsURIs = songs.map(song => song.songURI);
-    SpotifyPlayerClient.startPlayback(authToken, authUser.player.deviceId, songsURIs);
-    //TODO check if could start playback
-    setAuthUser(state => ({ ...state, player: 
-      { ...state.player, status: { ...state.player.status, playing: true, currentTrack: songs[0] } }
-    }));
-    // SpotifyPlayerClient.getPlayback(authToken, authUser.player.deviceId)
-    //   .then(playback => {
-    //     setAuthUser(state => ({ ...state, player: 
-    //       { ...state.player, status: { ...state.player.status, playing: playback.playing, currentTrack: playback.track } }
-    //     }));
-    //   });
+    console.log('Play:', song.name);
+    SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, song.songURI);
   }
   
   function pause () {
-    console.log('Pause:', authUser.player.status.currentTrack.name);
-    SpotifyPlayerClient.pausePlayback(authToken, authUser.player.deviceId);
-    //TODO check if could pause playback
-    setAuthUser(state => ({ ...state, player: 
-      { ...state.player, status: { ...state.player.status, playing: false } }
-    }));
+    authUser.player.player.pause()
+    .then(() => {
+        console.log('Paused:', authUser.player.status.currentTrack.name);
+      });
   }
 
   function resume () {
-    console.log('Resume:', authUser.player.status.currentTrack.name);
-    SpotifyPlayerClient.startPlayback(authToken, authUser.player.deviceId);
-    //TODO check if could resume playback
-    setAuthUser(state => ({ ...state, player: 
-      { ...state.player, status: { ...state.player.status, playing: true } }
-    }));
+    authUser.player.player.resume()
+    .then(() => {
+        console.log('Resumed:', authUser.player.status.currentTrack.name);
+      });
   }
 
   function next () {
     if (authUser.player.status.currentTrack) {
-      console.log('Next:', authUser.player.status.currentTrack.name);
-      SpotifyPlayerClient.skipPlaybackNext(authToken, authUser.player.deviceId);
-      //TODO check if could skip playback
-      setAuthUser(state => ({ ...state, player: 
-        { ...state.player, status: { ...state.player.status, playing: true } }
-      }));
+      authUser.player.player.nextTrack()
+      .then(() => {
+          console.log('Playing next');
+        });
     }
   }
 
   function previous () {
     if (authUser.player.status.currentTrack) {
-      console.log('Previous:', authUser.player.status.currentTrack.name);
-      SpotifyPlayerClient.skipPlaybackPrev(authToken, authUser.player.deviceId);
-      //TODO check if could skip playback
-      setAuthUser(state => ({ ...state, player: 
-        { ...state.player, status: { ...state.player.status, playing: true } }
-      }));
+      authUser.player.player.previousTrack()
+      .then(() => {
+          console.log('Playing previous');
+        });
     }
+  }
+
+  async function getPlayback (player) {
+    return await player.getCurrentState().then(state => {
+      if (!state) return Promise.reject('User is not playing music through the Web Playback SDK');
+      const parsedState = {
+        progress: state.position,
+        playing: !state.paused,
+        currentTrack: {
+          id: state.track_window.current_track.id,
+          songURI: state.track_window.current_track.uri,
+          name: state.track_window.current_track.name,
+          artists: state.track_window.current_track.artists.map(artist => artist.name).join(', '),
+        }
+      };
+      return parsedState;
+    });
   }
 
   return (
     <div className="PlayerTab">
-      <PlayerContext.Provider value={ { play, pause, resume, next, previous } }>
+      <PlayerContext.Provider value={ { play, pause, resume, next, previous, getPlayback } }>
         <Player />
         <Playlist />
       </PlayerContext.Provider>

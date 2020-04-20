@@ -16,7 +16,7 @@ function App() {
   const [authUser, setAuthUser] = useState(
     { userId,
       playlist: { playlistId: null, songs: [] },
-      player: { ready: false, deviceId: null, player: null, status: { playing: false, currentTrack: null, playbackList: [] } }
+      player: { ready: false, deviceId: null, player: null, status: { progress: 0, playing: false, currentTrack: null } }
     });
 
   return (
