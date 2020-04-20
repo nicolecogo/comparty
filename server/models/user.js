@@ -5,6 +5,7 @@ class User {
     this.displayName = profile.displayName;
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
+    this.playlist = null;
     this.expirationDate = Date.now() + (parseInt(expires_in) * 1000);
   }
   

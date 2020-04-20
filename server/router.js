@@ -19,13 +19,17 @@ router.get('/login', authorization.authenticate('spotify', {
 router.get('/login/callback', authorization.authenticate('spotify', {
   failureRedirect: '/' }), User.authenticate);
 
-//TODO change when client available
-router.get('/authenticated', (req, res) => {
-  res.send(`<h1>Authenticated ${req.user.displayName}!</h1>`);
-});
-//TODO change when client available
-router.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1> <a href="/login">LOGIN</a>');
-});
+//TODO endpoints to implement
+
+//Party.find searchs for an existing party with a given id
+//return boolean
+// router.get('/party/:id', Party.find);
+
+//Party.create checks if there are any parties associated with user
+//    if not, create one and a new spotify playlist
+//return partyId and spotify playlistId associated with party
+// router.get('/party/create', Party.create);
+
+// router.get('/party/join', Party.join);
 
 module.exports = router;
