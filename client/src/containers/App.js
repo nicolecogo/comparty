@@ -15,7 +15,7 @@ function App() {
   const userId = localStorage.getItem('user');
   const [authUser, setAuthUser] = useState(
     { userId,
-      playlist: { playlistId: null, songs: [] },
+      playlist: { playlistId: null, snapshotId: null, songs: [] },
       player: { ready: false, deviceId: null, player: null, status: { progress: 0, playing: false, currentTrack: null } }
     });
 

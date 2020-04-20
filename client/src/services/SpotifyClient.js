@@ -22,22 +22,31 @@ class SpotifyClient {
     if(!playlistId) return Promise.reject('No playlist id provided');
     const method = 'GET';
     const endpoint = `/playlists/${playlistId}/tracks`;
-    // const params = '?fields=track&market=from_token';
     const body = null;
     const playlist =  await this.fetchFromSpotify(method, endpoint, token, body);
-    return SpotifyParser.extractSongs(playlist);
+    if(!playlist) return null;
+    return SpotifyParser.extractSongsFromPlaylist(playlist);
+  }
+  
+  static async getPlaylistInfo (token, playlistId) {
+    if(!playlistId) return Promise.reject('No playlist id provided');
+    const method = 'GET';
+    const endpoint = `/playlists/${playlistId}`;
+    const body = null;
+    const playlist =  await this.fetchFromSpotify(method, endpoint, token, body);
+    if(!playlist) return null;
+    return SpotifyParser.extractPlaylistInfo(playlist);
   }
 
   static async findSong (token, searchWords) {
     if(!searchWords) return Promise.reject('No search words provided');
     const method = 'GET';
     const endpoint = '/search';
-    const body = {
-      q: encodeURI(searchWords),
-      type: 'album,artist,track',
-      market: 'from_token'
-    };
-    return await this.fetchFromSpotify(method, endpoint, token, body);
+    const params = `?q=${encodeURI(searchWords)}&type=track&market=from_token`;
+    const body = null;
+    const search = await this.fetchFromSpotify(method, endpoint + params, token, body);
+    if(!search) return null;
+    return SpotifyParser.extractSongsFromSearch(search.tracks.items);
   }
 
   static async createDefaultPlaylist (token, userId) {
@@ -65,22 +74,20 @@ class SpotifyClient {
     const method = 'POST';
     const endpoint = `/playlists/${playlistId}/tracks`;
     const body = {
-      uris: ['spotify:track:' + songURI]
+      uris: [songURI]
     };
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
 
-  static async removeSongFromPlaylist (token, playlistId, songURI, songPosition, snapshotId) {
+  static async removeSongFromPlaylist (token, playlistId, songURI, snapshotId) {
     if(!playlistId) return Promise.reject('No playlist id provided');
     if(!songURI) return Promise.reject('No song URI provided');
-    if(!songPosition) return Promise.reject('No song position provided');
     if(!snapshotId) return Promise.reject('No snapshot id provided');
     const method = 'DELETE';
     const endpoint = `/playlists/${playlistId}/tracks`;
     const body = {
       tracks: [{
-        uri: 'spotify:track:' + songURI,
-        positions: [songPosition]
+        uri: songURI
       }],
       snapshot_id: snapshotId
     };

@@ -1,7 +1,37 @@
 class SpotifyParser {
   
-  static extractSongs (playlist) {
-    return playlist.items.map(( {track} ) =>
+  static extractSongsFromPlaylist (songlist) {
+    return songlist.items.map(( {track} ) =>
+      ({
+        id: track.id,
+        duration: track.duration_ms,
+        songURI: track.uri,
+        name: track.name,
+        artists: track.artists.map(artist => artist.name).join(', ')
+      })
+    );
+  }
+
+  static extractPlaylistInfo (songlist) {
+    console.log(songlist);
+    return {
+      playlistId: songlist.id,
+      snapshotId: songlist.snapshot_id,
+      songs:
+        songlist.tracks.items.map(( {track} ) =>
+          ({
+            id: track.id,
+            duration: track.duration_ms,
+            songURI: track.uri,
+            name: track.name,
+            artists: track.artists.map(artist => artist.name).join(', ')
+          })
+        )
+      };
+  }
+  
+  static extractSongsFromSearch (songlist) {
+    return songlist.map(( track ) =>
       ({
         id: track.id,
         duration: track.duration_ms,

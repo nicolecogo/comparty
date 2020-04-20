@@ -74,22 +74,51 @@
   background-color: var(--primary-lightcolor3);
 }
 
+.button-container {
+  display: inline-flex;
+}
+
 .Track .button {
   visibility: hidden;
+  font-size: 10px;
+}
+
+.Track h4 {
+  min-height: 30px;
 }
 
 .Track:hover .button {
   visibility: visible;
   border: 0px;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 25px;
   background-color: var(--primary-darkcolor1);
   color: var(--primary-lightcolor1);
 }
 
-.Track .button:hover {
+.Track:hover .remove-btn {
+  background-color: transparent;
+  color: var(--primary-darkcolor1);
+  font-size: 20px;
+}
+
+.Track .pause-btn:hover, .play-btn:hover {
   box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
+}
+
+.Track .remove-btn:hover {
+  text-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
+}
+
+.Playlist::-webkit-scrollbar-track
+{
+  background-color: var(--primary-lightcolor1);
+}
+
+.Playlist::-webkit-scrollbar-thumb
+{
+  background-color: var(--primary-darkcolor1);
 }
 
 .UtilitiesTab { 
@@ -103,18 +132,33 @@
   height: 50%;
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.Search form {
+  display: flex;
 }
 
 .Search .button {
   border: 0px;
-  width: 65px;
+  min-width: 65px;
   height: 65px;
-  margin: 15px;
   border-radius: 65px;
   background-color: transparent;
   color: var(--primary-lightcolor1);
   font-size: 26px;
+}
+
+.Search .input {
+  border: 0px;
+  height: 65px;
+  padding: 15px;
+  min-width: 130px;
+  border-radius: 65px;
+  background-color: transparent;
+  color: var(--primary-lightcolor1);
+  font-size: 16px;
 }
 
 .Search:hover .button {
@@ -127,6 +171,48 @@
     color: var(--primary-darkcolor1);
     box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
   }
+}
+
+.SearchResult {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.SearchItem {
+  color: var(--primary-lightcolor3);
+  padding: 5px 0;
+  margin: 5px;
+  box-shadow: 0px 1px 0px 0px var(--primary-lightcolor3);
+  display: flex;
+  justify-content: space-between;
+}
+
+.SearchItem .add-button {
+  visibility: hidden;
+}
+
+.SearchItem:hover .add-button {
+  visibility: visible;
+  border: 0px;
+  width: 20px;
+  height: 20px;
+  border-radius: 25px;
+  background-color: var(--primary-lightcolor3);
+  color: var(--primary-darkcolor1);
+}
+
+.SearchItem .add-button:hover {
+  box-shadow: 0px 0px 10px 1px var(--primary-lightcolor2);
+}
+
+.Search ::-webkit-scrollbar-track
+{
+  background-color: var(--primary-lighcolor1);
+}
+
+.Search ::-webkit-scrollbar-thumb
+{
+  background-color: var(--primary-lightcolor2);
 }
 
 .Options {
