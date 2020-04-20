@@ -14,6 +14,8 @@ function Options () {
     localStorage.removeItem('token');
     setAuthUser();
     localStorage.removeItem('user');
+    localStorage.removeItem('playlistId');
+    localStorage.removeItem('partyCode');
   }
 
   const settingsIcon = <FontAwesomeIcon icon={faCog} />

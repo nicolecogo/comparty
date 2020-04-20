@@ -20,6 +20,10 @@
   color: var(--primary-lightcolor1);
 }
 
+.Homepage button:hover {
+  cursor: pointer;
+}
+
 .Homepage .input {
   margin: 20px 20px 20px 0;
   padding: 20px;
@@ -31,6 +35,16 @@
   border-color: var(--accent-color1);
   font-size: 16px;
   font-weight: bold;
+}
+
+.Homepage .link {
+  font-weight: 800;
+  font-style: oblique;
+}
+
+.Homepage .link:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .UserPage {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ServerClient from '../services/ServerClient';
+import { useAuth } from '../context/auth';
+import { Redirect } from 'react-router-dom';
 
 function Homepage () {
 
@@ -7,27 +9,38 @@ function Homepage () {
   const [ notFoundMessage, setNotFoundMessage ] = useState(false);
   const [ partyCode, setPartyCode ] = useState('');
 
+  const { authToken } =  useAuth();
+
   function showCodeInput () {
     setJoiningParty(true);
   }
 
   function joinParty () {
-    //TODO check if party code is correct (fetch from server)
-    //TODO    if yes, redirect to login page, and back to user page
-    if (partyCode === 'abcdef123456') {
-      loginPage(partyCode);
-    }
-    //TODO    if not, show not found message
-    setNotFoundMessage(true);
+    //TODO check if party code is correct (ask server)
+    // const playlistId = ServerClient.findParty(partyCode);
+    // if (playlistId)
+    if (partyCode === '123456qwerty') {
+      localStorage.setItem('partyCode', partyCode);
+      loginPage();
+    } else setNotFoundMessage(true);
   }
 
-  function loginPage (partyCode) {
-    let params = '';
-    if(partyCode) params = `?partyCode=${partyCode}`;
-    window.location.href = ServerClient._LOGIN_URL + params;
+  function createParty () {
+    //TODO authorize user and redirect back to user page
+    //TODO check if user has a party already or create it (fetch from server)
+    //TODO    return spotify playlistId associated with it (store playlistId)
+    //TODO    otherwise, create a new spotify playlist and retrieve it (store playlistId)
+    loginPage();
+  }
+
+  function loginPage () {
+    window.location.href = ServerClient._LOGIN_URL;
   }
 
   return (
+    authToken
+    ? <Redirect to="/user" />
+    : 
     <div className="Homepage">
       <div className="homepage-main">
         <div className="description">
@@ -35,7 +48,7 @@ function Homepage () {
           <h2>Start listening to songs together with your friends now!</h2>
         </div>
         <div className="login">
-          <button onClick={() => loginPage()}>Create a party</button>
+          <button onClick={() => createParty()}>Create a party</button>
           {
             isJoiningParty && partyCode
             ? <button onClick={() => joinParty()}>Join party</button>
@@ -51,12 +64,23 @@ function Homepage () {
           }
         </div>
         {
-          notFoundMessage &&
-          (
+          notFoundMessage
+          ? (
             <div>
               <h3>Party not found.</h3>
               <h4>Are you sure you have entered the correct code?</h4>
+              <h4>
+                Alternatively, you can go back to your previous party by 
+                <span className="link" onClick={ createParty }> logging in here</span>.
+              </h4>
             </div>
+          )
+          : (
+            <h4>
+              You can go back to your party by clicking on <br/>
+              <span className="link" onClick={ createParty }>Create Party</span> or by 
+              <span className="link" onClick={ createParty }> logging in here</span>.
+            </h4>
           )
         }
       </div>

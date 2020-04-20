@@ -12,10 +12,9 @@ function Playlist () {
   const { playlistChange } = usePlaylist();
   const playlist = authUser.playlist.songs;
   
+  //upon initialization and on state change get playlist songs from Spotify API
   useEffect(() => {
-    //TODO retrieve playlists to choose from or save unique app playlist
-    const playlistId = '7ygPUp7e6fSmOTkcuooQQv';
-    SpotifyClient.getPlaylistInfo(authToken, playlistId)
+    SpotifyClient.getPlaylistInfo(authToken, authUser.playlist.playlistId)
       .then(res => {
         setAuthUser(user => ( { ...user, playlist: res } ));
       })
@@ -23,8 +22,9 @@ function Playlist () {
         //TODO check if token expired or playlist deleted
         console.log(err);
       });
-  }, [authToken, setAuthUser]);
+  }, [authToken, setAuthUser, authUser.playlist.playlistId]);
 
+  //listens to playlist changes attempt and executes them
   useEffect(() => {
     if(playlistChange.action === 'add') {
       addToPlaylist(playlistChange.track);
@@ -33,8 +33,9 @@ function Playlist () {
     }
   }, [playlistChange]);
   
+  //add to playlist method made available through playlist state change
   function addToPlaylist (track) {
-    // try to add song to spotify playlist
+    // if successful at adding song to spotify playlist, update status
     SpotifyClient.addSongToPlaylist(authToken, authUser.playlist.playlistId, track.songURI)
       .then(res => {
         setAuthUser(state => 
@@ -53,8 +54,9 @@ function Playlist () {
       });
   }
 
+  //remove from playlist method made available through playlist state change
   function removeFromPlaylist (track) {
-    // try to add song to spotify playlist
+    // if successful at removing song from spotify playlist, update status
     SpotifyClient.removeSongFromPlaylist(authToken, authUser.playlist.playlistId, track.songURI, authUser.playlist.snapshotId)
       .then(res => {
         setAuthUser(state => 

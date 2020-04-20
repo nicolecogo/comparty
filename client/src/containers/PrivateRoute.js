@@ -12,7 +12,7 @@ function PrivateRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={props =>
-        (authToken && authUser)
+        (authToken && authUser && authUser.playlist.playlistId)
         ? (<Component {...props} />)
         : (<Redirect to="/" />) 
       }

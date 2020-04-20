@@ -11,12 +11,14 @@ import '../styles/App.css';
 
 function App() {
 
+  //upon initialization, check to see if there is a stored user state (keep session)
   const token = localStorage.getItem('token');
   const [authToken, setAuthToken] = useState(token);
   const userId = localStorage.getItem('user');
+  const playlistId = localStorage.getItem('playlistId');
   const [authUser, setAuthUser] = useState(
     { userId,
-      playlist: { playlistId: null, snapshotId: null, songs: [] },
+      playlist: { playlistId: playlistId, snapshotId: null, songs: [] },
       player: { ready: false, deviceId: null, player: null, status: { progress: 0, playing: false, currentTrack: null } }
     });
 
