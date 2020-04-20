@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause, faBackward, faForward } from '@fortawesome/free-solid-svg-icons'
 import useScript from '../hooks/useScript'

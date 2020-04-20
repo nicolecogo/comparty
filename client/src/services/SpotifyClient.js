@@ -22,7 +22,7 @@ class SpotifyClient {
     if(!playlistId) return Promise.reject('No playlist id provided');
     const method = 'GET';
     const endpoint = `/playlists/${playlistId}/tracks`;
-    const params = '?fields=track&market=from_token';
+    // const params = '?fields=track&market=from_token';
     const body = null;
     const playlist =  await this.fetchFromSpotify(method, endpoint, token, body);
     return SpotifyParser.extractSongs(playlist);

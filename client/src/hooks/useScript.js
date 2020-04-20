@@ -8,7 +8,7 @@ const useScript = (url) => {
     script.async = false;
 
     document.body.appendChild(script);
-  }, []);
+  }, [url]);
 };
 
 export default useScript;

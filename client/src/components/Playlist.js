@@ -21,7 +21,7 @@ function Playlist () {
         //TODO check if token expired or playlist deleted
         console.log(err);
       });
-  }, []);
+  }, [authToken, setAuthUser]);
 
   return (
     <div className="Playlist">
