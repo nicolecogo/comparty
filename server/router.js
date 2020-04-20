@@ -2,7 +2,6 @@ const router = require('express').Router();
 
 const authorization = require('./services/authorization');
 const User = require('./controllers/user');
-const SpotifyAPI = require('./services/spotifyAPI');
 
 router.get('/login', authorization.authenticate('spotify', {
             scope: ['user-read-email',
@@ -19,13 +18,6 @@ router.get('/login', authorization.authenticate('spotify', {
               
 router.get('/login/callback', authorization.authenticate('spotify', {
               failureRedirect: '/' }), User.authenticate);
-
-router.get('/browse/discover', ensureAuthenticated, SpotifyAPI.discoverSongs);
-router.get('/browse/find', ensureAuthenticated, SpotifyAPI.findSong);
-router.get('/me/playlists', ensureAuthenticated, SpotifyAPI.getUserPlaylists);
-router.post('/me/playlist/create', ensureAuthenticated, SpotifyAPI.createPlaylist);
-router.post('/me/playlist/add', ensureAuthenticated, SpotifyAPI.addSongToPlaylist);
-router.delete('/me/playlist/remove', ensureAuthenticated, SpotifyAPI.removeSongFromPlaylist);
 
 //TODO change when client available
 router.get('/authenticated', (req, res) => {

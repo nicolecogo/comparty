@@ -16,12 +16,15 @@ function PlayerTab () {
     const songsURIs = songs.map(song => song.songURI);
     SpotifyPlayerClient.startPlayback(authToken, authUser.player.deviceId, songsURIs);
     //TODO check if could start playback
-    SpotifyPlayerClient.getPlayback(authToken, authUser.player.deviceId)
-      .then(playback => {
-        setAuthUser(state => ({ ...state, player: 
-          { ...state.player, status: { ...state.player.status, playing: playback.playing, currentTrack: playback.track } }
-        }));
-      });
+    setAuthUser(state => ({ ...state, player: 
+      { ...state.player, status: { ...state.player.status, playing: true, currentTrack: songs[0] } }
+    }));
+    // SpotifyPlayerClient.getPlayback(authToken, authUser.player.deviceId)
+    //   .then(playback => {
+    //     setAuthUser(state => ({ ...state, player: 
+    //       { ...state.player, status: { ...state.player.status, playing: playback.playing, currentTrack: playback.track } }
+    //     }));
+    //   });
   }
   
   function pause () {
