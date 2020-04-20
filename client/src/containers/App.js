@@ -4,6 +4,7 @@ import PrivateRoute from '../containers/PrivateRoute';
 import HomePage from './Homepage';
 import UserPage from './UserPage';
 import Login from './Login';
+import Join from './Join';
 import { AuthContext } from '../context/auth';
 import { UserContext } from '../context/user';
 import '../styles/App.css';
@@ -27,6 +28,7 @@ function App() {
             <Route exact path="/" component={HomePage}/>
             <UserContext.Provider value={ {authUser, setAuthUser} }>
               <Route path="/login" component={Login}/>
+              <Route path="/join" component={Join}/>
               <PrivateRoute path="/user" component={UserPage}/>
             </UserContext.Provider>
           </Switch>

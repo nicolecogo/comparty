@@ -7,6 +7,32 @@
   width: fit-content;
 }
 
+.Homepage button {
+  margin: 20px 20px 20px 0;
+  padding: 20px;
+  width: 180px;
+  height: 65px;
+  border: 0;
+  border-radius: 5px;
+  background-color: var(--accent-color1);
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primary-lightcolor1);
+}
+
+.Homepage .input {
+  margin: 20px 20px 20px 0;
+  padding: 20px;
+  width: 230px;
+  height: 65px;
+  border: 2px dashed;
+  border-radius: 5px;
+  background-color: transparent;
+  border-color: var(--accent-color1);
+  font-size: 16px;
+  font-weight: bold;
+}
+
 .UserPage {
   display: flex;
   flex-direction: row;
@@ -167,9 +193,10 @@
 
 @keyframes search-btn {
   to {
-    background-color: var(--primary-lightcolor3);
-    color: var(--primary-darkcolor1);
-    box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3);
+    /* background-color: var(--primary-lightcolor3); */
+    /* color: var(--primary-darkcolor1); */
+    /* box-shadow: 0px 0px 10px 1px var(--primary-lightcolor3); */
+    color: var(--primary-lightcolor3);
   }
 }
 
