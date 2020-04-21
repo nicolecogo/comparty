@@ -13,6 +13,7 @@ function Login () {
   
   const token = new URLSearchParams(useLocation().search).get('token');
   const userId = new URLSearchParams(useLocation().search).get('user');
+  const displayName = new URLSearchParams(useLocation().search).get('displayName');
   const partyCode = localStorage.getItem('partyCode');
   // let playlistId;
   //TODO if there is no party code, create a new party if user doesn't have any
@@ -33,6 +34,7 @@ function Login () {
   localStorage.setItem('token', token);
   localStorage.setItem('user', userId);
   localStorage.setItem('playlistId', playlistId);
+  localStorage.setItem('displayName', displayName);
   localStorage.setItem('partyCode', partyCode);
   
   return (
