@@ -13,7 +13,6 @@ class SpotifyParser {
   }
 
   static extractPlaylistInfo (songlist) {
-    console.log(songlist);
     return {
       playlistId: songlist.id,
       snapshotId: songlist.snapshot_id,
@@ -46,7 +45,7 @@ class SpotifyParser {
     return {
       progress: playback.progress_ms,
       playing: playback.is_playing,
-      track: {
+      currentTrack: {
         id: playback.item.id,
         duration: playback.item.duration_ms,
         songURI: playback.item.uri,

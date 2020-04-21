@@ -1,4 +1,5 @@
 import SpotifyParser from './SpotifyParser';
+import axios from 'axios';
 
 class SpotifyClient {
 
@@ -105,10 +106,10 @@ class SpotifyClient {
   }
 
   static async startPlayback (token, deviceId, songsURIs, songURI, position) {
-    if(!deviceId) return Promise.reject('No device id provided');
     const method = 'PUT';
-    const endpoint = `/me/player/play?device_id=${deviceId}`;
-    let body = null;
+    let endpoint = `/me/player/play`;
+    if(deviceId) endpoint = endpoint.concat(`?device_id=${deviceId}`);
+    let body = {};
     if(!songURI) songURI = songsURIs[0];
     if(songsURIs && songsURIs[0]) {
       body = {
@@ -121,25 +122,25 @@ class SpotifyClient {
   }
   
   static async pausePlayback (token, deviceId) {
-    if(!deviceId) return Promise.reject('No device id provided');
     const method = 'PUT';
-    const endpoint = `/me/player/pause`;
+    let endpoint = `/me/player/pause`;
+    if(deviceId) endpoint = endpoint.concat(`?device_id=${deviceId}`);
     let body = null;
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
   
   static async skipPlaybackNext (token, deviceId) {
-    if(!deviceId) return Promise.reject('No device id provided');
     const method = 'POST';
-    const endpoint = `/me/player/next`;
+    let endpoint = `/me/player/next`;
+    if(deviceId) endpoint = endpoint.concat(`?device_id=${deviceId}`);
     let body = null;
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
   
   static async skipPlaybackPrev (token, deviceId) {
-    if(!deviceId) return Promise.reject('No device id provided');
     const method = 'POST';
-    const endpoint = `/me/player/previous`;
+    let endpoint = `/me/player/previous`;
+    if(deviceId) endpoint = endpoint.concat(`?device_id=${deviceId}`);
     let body = null;
     return await this.fetchFromSpotify(method, endpoint, token, body);
   }
@@ -148,14 +149,15 @@ class SpotifyClient {
     const url = `${this.BASE_URL}${endpoint}`;
     const options = {
       method,
+      url,
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     };
-    if(body) options.body = JSON.stringify(body);
-    return await fetch(url, options)
-      .then(response => response.json())
+    if(body) options.data = JSON.stringify(body);
+
+    return axios(options)
       .then(response => {
         if(response.error && response.error.message) {
           console.log('Error retrieving from Spotify API', response.error.message);
@@ -163,6 +165,7 @@ class SpotifyClient {
         }
         else return response;
       })
+      .then(response => response.data)
       .catch(err => {
         console.log('Error retrieving from Spotify API', err);
         return null;
