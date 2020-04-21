@@ -5,7 +5,7 @@ import UtilitiesTab from './UtilitiesTab';
 import { PlaylistContext } from '../context/playlist';
 
 function UserPage () {
-  
+
   const [ playlistChange, changePlaylist ] = useState({action: '', track: null});
 
   return (

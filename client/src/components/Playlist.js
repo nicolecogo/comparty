@@ -1,13 +1,14 @@
 import React, { useEffect }  from 'react';
 import Track from './Track';
-import SpotifyClient from '../services/SpotifyClient';
 import { useAuth } from '../context/auth';
 import { useUser } from '../context/user';
 import { usePlaylist } from '../context/playlist';
+import SpotifyClient from '../services/SpotifyClient';
+import SocketClient from '../services/SocketClient';
 
 function Playlist () {
 
-  const { authToken } = useAuth();
+  const { authToken, setAuthToken } = useAuth();
   const { authUser, setAuthUser } = useUser();
   const { playlistChange } = usePlaylist();
   const playlist = authUser.playlist.songs;
@@ -21,6 +22,11 @@ function Playlist () {
       .catch(err => {
         //TODO check if token expired or playlist deleted
         console.log(err);
+        setAuthToken();
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('playlistId');
+        localStorage.removeItem('partyCode');
       });
   }, [authToken, setAuthUser, authUser.playlist.playlistId]);
 
@@ -31,6 +37,7 @@ function Playlist () {
     } else if(playlistChange.action === 'remove') {
       removeFromPlaylist(playlistChange.track);
     }
+    SocketClient.sendPlaylistChange(authUser.playlist);
   }, [playlistChange]);
   
   //add to playlist method made available through playlist state change

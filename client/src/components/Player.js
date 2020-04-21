@@ -73,10 +73,10 @@ function Player () {
           console.error(message);
         });
         // Playback status updates
-        player.addListener('player_state_changed', state => {
-          //TODO trigger socket comunication
-          getPlayback(player)
-            .then(playback => {
+        player.addListener('player_state_changed', async () => {
+          try {
+            const playback = await getPlayback(player);
+            if(playback) {
               setAuthUser(state => ({ ...state, player: 
                 { ...state.player,
                   status: {
@@ -87,10 +87,13 @@ function Player () {
                   }
                 }
               }));
-            });
+            }
+          } catch (error) {
+            console.log(error);
+          }
         });
         // Ready
-        player.addListener('ready', ({ device_id }) => {
+        player.addListener('ready', async ({ device_id }) => {
           console.log('Ready with Device ID', device_id);
           setAuthUser(state => ({ ...state, player: 
             { ...state.player, deviceId: device_id, ready: true }
@@ -100,10 +103,10 @@ function Player () {
         player.addListener('not_ready', ({ device_id }) => {
           console.log('Device ID has gone offline', device_id);
           setAuthUser(state => ({ ...state, player: 
-            { ...state.player, ready: false }
+            { ...state.player, ready: false, deviceId: null }
           }));
         });
-        setAuthUser(state => ({ ...state, player: { ...state.player, player, ready: true }}));
+        setAuthUser(state => ({ ...state, player: { ...state.player, player, ready: false }}));
         // Connect to the player!
         player.connect();
       }

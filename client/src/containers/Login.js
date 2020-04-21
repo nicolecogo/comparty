@@ -19,7 +19,7 @@ function Login () {
   // if(!partyCode) {playlistId, partyCode} = ServerClient.createOrRetrieveParty(userId);
   //TODO if there is a party code, subscribe user to it
   // else playlistId = ServerClient.subscribeToParty(userId, partyCode);
-  const playlistId = '7ygPUp7e6fSmOTkcuooQQv';
+  const playlistId = '0ZG19BTfYVGL05tYaH1CfM';
   
   if (!token) return (<Redirect to="/" />);
   if (!userId) return (<Redirect to="/" />);
