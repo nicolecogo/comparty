@@ -160,15 +160,13 @@ class SpotifyClient {
     return axios(options)
       .then(response => {
         if(response.error && response.error.message) {
-          console.log('Error retrieving from Spotify API', response.error.message);
-          return null;
+          Promise.reject('Error retrieving from Spotify API', response.error.message);
         }
         else return response;
       })
       .then(response => response.data)
       .catch(err => {
-        console.log('Error retrieving from Spotify API', err);
-        return null;
+        Promise.reject('Error retrieving from Spotify API', err);
       });
   }
 }

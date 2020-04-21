@@ -15,6 +15,9 @@ function PlayerTab () {
   useEffect(() => {
     const partyCode = localStorage.getItem('partyCode');
     SocketClient.socketListeners(partyCode, { updatePlaylist, updatePlayback });
+    return function cleanup() {
+      SocketClient.disconnect();
+    }
   }, []);
 
   //callback function passed to socket listeners to synchronize playlist
@@ -34,15 +37,17 @@ function PlayerTab () {
   }
 
   //callback function passed to socket listeners to synchronize playback
-  async function updatePlayback (playback, action) {
+  async function updatePlayback (playback, action, timestamp) {
     const songURI = playback.currentTrack.songURI;
-    const progress = playback.progress;
+    let progress = playback.progress;
     const songsURIs = playback.songsURIs;
     let playing = true;
     console.log('deviceid', authUser.player.deviceId);
     console.log('songsURIs', songsURIs);
     console.log('playback.currentTrack.songURI', playback.currentTrack.songURI);
     console.log('playback.progress', playback.progress);
+    console.log('timestamp', timestamp);
+    progress += Date.now() - timestamp;
     try {
       switch (action) {
         case 'play': await SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, songURI, progress); break;
@@ -84,49 +89,87 @@ function PlayerTab () {
   }
   
   async function pause () {
-    await authUser.player.player.pause();
-    console.log('Paused:', authUser.player.status.currentTrack.name);
-    sendPlaybackChange('pause');
+    try {
+      await authUser.player.player.pause();
+      console.log('Paused:', authUser.player.status.currentTrack.name);
+      sendPlaybackChange('pause');
+    } catch (error) {
+      console.log('It was not possible to pause', error);
+    }
   }
 
   async function resume () {
-    await authUser.player.player.resume();
-    console.log('Resumed:', authUser.player.status.currentTrack.name);
-    sendPlaybackChange('resume');
+    try {
+      await authUser.player.player.resume();
+      console.log('Resumed:', authUser.player.status.currentTrack.name);
+      sendPlaybackChange('resume');
+    } catch (error) {
+      console.log('It was not possible to resume', error);
+    }
   }
 
   async function next () {
-    if (authUser.player.status.currentTrack) {
-      await authUser.player.player.nextTrack();
-      console.log('Playing next');
-      sendPlaybackChange('next');
+    try {
+      if (authUser.player.status.currentTrack) {
+        await authUser.player.player.nextTrack();
+        console.log('Playing next');
+        sendPlaybackChange('next');
+      }
+    } catch (error) {
+      console.log('It was not possible to skip next', error);
     }
   }
 
   async function previous () {
-    if (authUser.player.status.currentTrack) {
-      await authUser.player.player.previousTrack()
-      console.log('Playing previous');
-      sendPlaybackChange('previous');
+    try {
+      if (authUser.player.status.currentTrack) {
+        await authUser.player.player.previousTrack()
+        console.log('Playing previous');
+        sendPlaybackChange('previous');
+      }
+    } catch (error) {
+      console.log('It was not possible to pause', error);
     }
   }
 
   async function sendPlaybackChange (action) {
     console.log('device id', authUser.player.deviceId);
+    const timestamp = Date.now();
     //player changes status several times before starting the command
     //wait to have updated information
     setTimeout(async () => {
-      const playback = await getPlayback(authUser.player.deviceId);
-      playback.songsURIs = authUser.playlist.songs.map(song => song.songURI);
-      console.log('plaback updated after change', playback);
-      SocketClient.sendPlaybackChange(playback, action);
-    }, 100);
+      try {
+        const playback = await getPlayback(authUser.player.deviceId);
+        if (playback) {
+          playback.songsURIs = authUser.playlist.songs.map(song => song.songURI);
+          if (action === 'pause') playback.currentTrack = authUser.player.status.currentTrack;
+          console.log('plaback updated after change', playback);
+          SocketClient.sendPlaybackChange(playback, action, timestamp);
+          setAuthUser(state => ({ ...state, player: 
+            { ...state.player,
+              status: {
+                ...state.player.status,
+                progress: playback.progress,
+                playing: playback.playing,
+                currentTrack: playback.currentTrack
+              }
+            }
+          }));
+        }
+      } catch (error) {
+        console.log('Not possible to update playback', error);
+      }
+    }, 200);
   }
 
   async function getPlayback (deviceId) {
-    const playback = await SpotifyClient.getPlayback(authToken, deviceId);
-    if (!playback) return Promise.reject('User is not playing music through the Web Playback SDK');
-    return playback;
+    try {
+      const playback = await SpotifyClient.getPlayback(authToken, deviceId);
+      if (!playback) return Promise.reject('User is not playing music through the Web Playback SDK');
+      return playback;
+    } catch (error) {
+      console.log('Problem retrieving current playback', error);
+    }
   }
 
   return (

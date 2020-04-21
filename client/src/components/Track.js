@@ -18,7 +18,7 @@ function Track ({track}) {
   const playIcon = <FontAwesomeIcon icon={faPlay} />
   const pauseIcon = <FontAwesomeIcon icon={faPause} />
   const removeIcon = <FontAwesomeIcon icon={faTimes} />
-  const currentClass =  authUser.player.status.playing
+  const currentClass = authUser.player.status.currentTrack
     && authUser.player.status.currentTrack.id === track.id ? 'current' : '';
   return (
     <div className={"Track " + currentClass}>

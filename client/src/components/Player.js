@@ -74,23 +74,23 @@ function Player () {
         });
         // Playback status updates
         player.addListener('player_state_changed', async () => {
-          try {
-            const playback = await getPlayback(player);
-            if(playback) {
-              setAuthUser(state => ({ ...state, player: 
-                { ...state.player,
-                  status: {
-                    ...state.player.status,
-                    progress: playback.progress,
-                    playing: playback.playing,
-                    currentTrack: playback.currentTrack
-                  }
-                }
-              }));
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          // try {
+          //   const playback = await getPlayback(player);
+          //   if(playback) {
+          //     setAuthUser(state => ({ ...state, player: 
+          //       { ...state.player,
+          //         status: {
+          //           ...state.player.status,
+          //           progress: playback.progress,
+          //           playing: playback.playing,
+          //           currentTrack: playback.currentTrack
+          //         }
+          //       }
+          //     }));
+          //   }
+          // } catch (error) {
+          //   console.log(error);
+          // }
         });
         // Ready
         player.addListener('ready', async ({ device_id }) => {

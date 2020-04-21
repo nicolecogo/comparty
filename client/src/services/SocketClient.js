@@ -21,9 +21,9 @@ class SocketClient {
       updatePlaylist(playlist);
     });
     //listen for changes on playback
-    this.socket.on(`from:${this.partyCode}:updatePlayback`, ({action, playback}) => {
+    this.socket.on(`from:${this.partyCode}:updatePlayback`, ({action, timestamp, playback}) => {
       console.log('msg from server updated playback', action, playback);
-      updatePlayback(playback, action);
+      updatePlayback(playback, action, timestamp);
     });
   }
 
@@ -33,8 +33,8 @@ class SocketClient {
   }
 
   //notify the playback has changed
-  static sendPlaybackChange(updatedPlayback, action) {
-    this.send(`updatePlayback`, {action, playback: updatedPlayback});
+  static sendPlaybackChange(updatedPlayback, action, timestamp) {
+    this.send(`updatePlayback`, {action, timestamp, playback: updatedPlayback});
   }
   
   //generic method for emitting messages
@@ -42,6 +42,10 @@ class SocketClient {
     if(!this.partyCode) new Error('Party code not available');
     if(!this.socket) new Error('Socket not available');
     this.socket.emit(`from:${this.partyCode}:${endpoint}`, data);
+  }
+
+  static disconnect () {
+    this.socket.close();
   }
 }
 
