@@ -17,7 +17,7 @@ function SearchItem ({ result, resetSearch }) {
     <div className="SearchItem">
       <div>
         <h4>{ result.name }</h4>
-        <h4>{ result.artists }</h4>
+        <h5>{ result.artists }</h5>
       </div>
       <button className="add-button" onClick={() => add(result)}>{plusIcon}</button>
     </div>

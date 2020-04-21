@@ -22,7 +22,10 @@ function Track ({track}) {
     && authUser.player.status.currentTrack.id === track.id ? 'current' : '';
   return (
     <div className={"Track " + currentClass}>
-      <h4>{`${track.name} - ${track.artists}`}</h4>
+      <div>
+        <h3>{`${track.name}`}</h3>
+        <h5>{`${track.artists}`}</h5>
+      </div>
       <div className="button-container">
         {
           authUser.player.status.playing && (authUser.player.status.currentTrack.id === track.id)

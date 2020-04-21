@@ -6,29 +6,33 @@ import { usePlaylist } from '../context/playlist';
 import SpotifyClient from '../services/SpotifyClient';
 import SocketClient from '../services/SocketClient';
 
-function Playlist () {
+function Playlist ({loading}) {
 
-  const { authToken, setAuthToken } = useAuth();
+  const { authToken } = useAuth();
   const { authUser, setAuthUser } = useUser();
   const { playlistChange } = usePlaylist();
   const playlist = authUser.playlist.songs;
   
   //upon initialization and on state change get playlist songs from Spotify API
   useEffect(() => {
-    SpotifyClient.getPlaylistInfo(authToken, authUser.playlist.playlistId)
-      .then(res => {
-        setAuthUser(user => ( { ...user, playlist: res } ));
-      })
-      .catch(err => {
+    loading.setLoadingPlaylist(true);
+    getPlaylistFromServer();
+    async function getPlaylistFromServer () {
+      try {
+        const playlistInfo = await SpotifyClient.getPlaylistInfo(authToken, authUser.playlist.playlistId)
+        setAuthUser(user => ( { ...user, playlist: playlistInfo } ));
+        loading.setLoadingPlaylist(false);
+      } catch (error) {
         //TODO check if token expired or playlist deleted
-        console.log(err);
-        setAuthToken();
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('playlistId');
-        localStorage.removeItem('partyCode');
-      });
-  }, [authToken, setAuthUser, authUser.playlist.playlistId]);
+        console.log('Could not retrieve playlist from server', error);
+        // setAuthToken();
+        // localStorage.removeItem('token');
+        // localStorage.removeItem('userId');
+        // localStorage.removeItem('playlistId');
+        // localStorage.removeItem('partyCode');
+      }
+    }
+  }, [authUser.playlist.playlistId]);
 
   //listens to playlist changes attempt and executes them
   useEffect(() => {
@@ -38,13 +42,11 @@ function Playlist () {
       removeFromPlaylist(playlistChange.track);
     }
     SocketClient.sendPlaylistChange(authUser.playlist);
-  }, [playlistChange]);
-  
-  //add to playlist method made available through playlist state change
-  function addToPlaylist (track) {
-    // if successful at adding song to spotify playlist, update status
-    SpotifyClient.addSongToPlaylist(authToken, authUser.playlist.playlistId, track.songURI)
-      .then(res => {
+    //add to playlist method made available through playlist state change
+    async function addToPlaylist (track) {
+      try {
+        // if successful at adding song to spotify playlist, update status
+        const res = await SpotifyClient.addSongToPlaylist(authToken, authUser.playlist.playlistId, track.songURI);
         setAuthUser(state => 
           ({
             ...state,
@@ -58,14 +60,15 @@ function Playlist () {
             }
           })
         );
-      });
-  }
-
-  //remove from playlist method made available through playlist state change
-  function removeFromPlaylist (track) {
-    // if successful at removing song from spotify playlist, update status
-    SpotifyClient.removeSongFromPlaylist(authToken, authUser.playlist.playlistId, track.songURI, authUser.playlist.snapshotId)
-      .then(res => {
+      } catch (error) {
+        console.log('It was not possible to add song to playlist');
+      }
+    }
+    //remove from playlist method made available through playlist state change
+    async function removeFromPlaylist (track) {
+      try {
+        // if successful at removing song from spotify playlist, update status
+        const res = await SpotifyClient.removeSongFromPlaylist(authToken, authUser.playlist.playlistId, track.songURI, authUser.playlist.snapshotId);
         setAuthUser(state => 
           ({
             ...state,
@@ -76,13 +79,17 @@ function Playlist () {
             }
           })
         );
-      });
-  }
+      } catch (error) {
+        console.log('It was not possible to remove song from playlist');
+      }
+    }
+  }, [playlistChange]);
+  
 
   return (
     <div className="Playlist">
       {
-        playlist
+        !loading.loadingPlaylist && playlist
         ? playlist.map(track => (<Track key={track.id} track={track}/>))
         : <h3>No playlist selected</h3>
       }

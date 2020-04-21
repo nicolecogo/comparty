@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Player from '../components/Player';
 import Playlist from '../components/Playlist';
 import { useAuth } from '../context/auth';
@@ -11,6 +11,8 @@ function PlayerTab () {
 
   const { authToken } = useAuth();
   const { authUser, setAuthUser } = useUser();
+  
+  const [ loadingPlaylist, setLoadingPlaylist ] = useState(true);
   
   useEffect(() => {
     const partyCode = localStorage.getItem('partyCode');
@@ -176,7 +178,7 @@ function PlayerTab () {
     <div className="PlayerTab">
       <PlayerContext.Provider value={ { play, pause, resume, next, previous, getPlayback } }>
         <Player />
-        <Playlist />
+        <Playlist loading={ {loadingPlaylist, setLoadingPlaylist} }/>
       </PlayerContext.Provider>
     </div>
   );
