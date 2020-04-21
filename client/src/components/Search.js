@@ -14,24 +14,28 @@ function SearchBar () {
 
   function search (e) {
     e.preventDefault();
+  }
+
+  function handleChange (e) {
+    setSearchKeywords(e.target.value);
     if(searchKeywords) {
       SpotifyClient.findSong(authToken, searchKeywords)
         .then(res => setSearchResult(res));
     }
-    setSearchKeywords('');
   }
 
   function cleanResults () {
     setSearchResult([]);
+    setSearchKeywords('');
   }
 
   const searchIcon = <FontAwesomeIcon icon={faSearch} />
   return (
-    <div className="Search">
+    <div className="Search" onMouseLeave={cleanResults}>
       <form onSubmit={search}>
         <input className="input" type="text" placeholder="search songs"
           value={searchKeywords}
-          onChange={(e) => setSearchKeywords(e.target.value)}
+          onChange={handleChange}
         />
         <button className="button" type="submit">
           {searchIcon}
