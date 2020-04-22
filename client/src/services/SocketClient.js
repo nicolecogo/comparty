@@ -21,9 +21,9 @@ class SocketClient {
       updatePlaylist(playlist);
     });
     //listen for changes on playback
-    this.socket.on(`from:${this.partyCode}:updatePlayback`, ({action, timestamp, playback}) => {
+    this.socket.on(`from:${this.partyCode}:updatePlayback`, ({action, timestamp, playback, author}) => {
       console.log('msg from server updated playback', action, playback);
-      updatePlayback(playback, action, timestamp);
+      updatePlayback(playback, action, timestamp, author);
     });
   }
 
@@ -33,8 +33,8 @@ class SocketClient {
   }
 
   //notify the playback has changed
-  static sendPlaybackChange(updatedPlayback, action, timestamp) {
-    this.send(`updatePlayback`, {action, timestamp, playback: updatedPlayback});
+  static sendPlaybackChange(updatedPlayback, action, timestamp, author) {
+    this.send(`updatePlayback`, {action, timestamp, playback: updatedPlayback, author});
   }
   
   //generic method for emitting messages

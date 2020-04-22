@@ -6,6 +6,7 @@ import { useUser } from '../context/user';
 import { PlayerContext } from '../context/player';
 import SpotifyClient from '../services/SpotifyClient';
 import SocketClient from '../services/SocketClient';
+import PlaybackLog from '../components/PlaybackLog';
 
 function PlayerTab () {
 
@@ -13,6 +14,11 @@ function PlayerTab () {
   const { authUser, setAuthUser } = useUser();
   
   const [ loadingPlaylist, setLoadingPlaylist ] = useState(true);
+
+  const [ log, setLog ] = useState('');
+  function logPlaybackStatus (log) {
+    setLog(log);
+  }
   
   useEffect(() => {
     const partyCode = localStorage.getItem('partyCode');
@@ -39,7 +45,7 @@ function PlayerTab () {
   }
 
   //callback function passed to socket listeners to synchronize playback
-  async function updatePlayback (playback, action, timestamp) {
+  async function updatePlayback (playback, action, timestamp, author) {
     const songURI = playback.currentTrack.songURI;
     let progress = playback.progress;
     const songsURIs = playback.songsURIs;
@@ -52,12 +58,30 @@ function PlayerTab () {
     progress += Date.now() - timestamp;
     try {
       switch (action) {
-        case 'play': await SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, songURI, progress); break;
-        case 'resume': await SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, songURI, progress); break;
-        case 'pause': await SpotifyClient.pausePlayback(authToken, authUser.player.deviceId); playing = false; break;
-        case 'next': await SpotifyClient.skipPlaybackNext(authToken, authUser.player.deviceId); break;
-        case 'previous': await SpotifyClient.skipPlaybackPrev(authToken, authUser.player.deviceId); break;
-        default: console.log('Not a valid action', action); break;
+        case 'play':
+          await SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, songURI, progress);
+          logPlaybackStatus(`${author.displayName} started playback`);
+          break;
+        case 'resume':
+          await SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, songURI, progress);
+          logPlaybackStatus(`${author.displayName} resumed playback`);
+          break;
+        case 'pause':
+          await SpotifyClient.pausePlayback(authToken, authUser.player.deviceId);
+          playing = false;
+          logPlaybackStatus(`${author.displayName} paused`);
+          break;
+        case 'next':
+          await SpotifyClient.skipPlaybackNext(authToken, authUser.player.deviceId);
+          logPlaybackStatus(`${author.displayName} skipped to next song`);
+          break;
+        case 'previous':
+          await SpotifyClient.skipPlaybackPrev(authToken, authUser.player.deviceId);
+          logPlaybackStatus(`${author.displayName} skipped to previous song`);
+          break;
+        default: 
+          console.log('Not a valid action', action); 
+          break;
       }
       setAuthUser(user => ({
         ...user,
@@ -85,6 +109,7 @@ function PlayerTab () {
     try {
       await SpotifyClient.startPlayback(authToken, authUser.player.deviceId, songsURIs, song.songURI);
       sendPlaybackChange('play');
+      logPlaybackStatus(`${authUser.displayName} started playback`);
     } catch (error) {
       console.log('It was not possible to play requested songs', error);
     }
@@ -95,6 +120,7 @@ function PlayerTab () {
       await authUser.player.player.pause();
       console.log('Paused:', authUser.player.status.currentTrack.name);
       sendPlaybackChange('pause');
+      logPlaybackStatus(`${authUser.displayName} paused`);
     } catch (error) {
       console.log('It was not possible to pause', error);
     }
@@ -105,6 +131,7 @@ function PlayerTab () {
       await authUser.player.player.resume();
       console.log('Resumed:', authUser.player.status.currentTrack.name);
       sendPlaybackChange('resume');
+      logPlaybackStatus(`${authUser.displayName} resumed playback`);
     } catch (error) {
       console.log('It was not possible to resume', error);
     }
@@ -116,6 +143,7 @@ function PlayerTab () {
         await authUser.player.player.nextTrack();
         console.log('Playing next');
         sendPlaybackChange('next');
+        logPlaybackStatus(`${authUser.displayName} skipped to next song`);
       }
     } catch (error) {
       console.log('It was not possible to skip next', error);
@@ -128,6 +156,7 @@ function PlayerTab () {
         await authUser.player.player.previousTrack()
         console.log('Playing previous');
         sendPlaybackChange('previous');
+        logPlaybackStatus(`${authUser.displayName} skipped to previous song`);
       }
     } catch (error) {
       console.log('It was not possible to pause', error);
@@ -146,7 +175,8 @@ function PlayerTab () {
           playback.songsURIs = authUser.playlist.songs.map(song => song.songURI);
           if (action === 'pause') playback.currentTrack = authUser.player.status.currentTrack;
           console.log('plaback updated after change', playback);
-          SocketClient.sendPlaybackChange(playback, action, timestamp);
+          const { displayName, userId } = authUser;
+          SocketClient.sendPlaybackChange(playback, action, timestamp, { displayName, userId });
           setAuthUser(state => ({ ...state, player: 
             { ...state.player,
               status: {
@@ -177,8 +207,12 @@ function PlayerTab () {
   return (
     <div className="PlayerTab">
       <PlayerContext.Provider value={ { play, pause, resume, next, previous, getPlayback } }>
-        <Player />
-        <Playlist loading={ {loadingPlaylist, setLoadingPlaylist} }/>
+        <Player logStatus={logPlaybackStatus}/>
+        <Playlist
+          loading={ {loadingPlaylist, setLoadingPlaylist} }
+          logStatus={logPlaybackStatus}
+        />
+        <PlaybackLog log={ log }/>
       </PlayerContext.Provider>
     </div>
   );

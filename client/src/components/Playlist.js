@@ -69,18 +69,22 @@ function Playlist ({loading}) {
       try {
         // if successful at removing song from spotify playlist, update status
         const res = await SpotifyClient.removeSongFromPlaylist(authToken, authUser.playlist.playlistId, track.songURI, authUser.playlist.snapshotId);
-        setAuthUser(state => 
-          ({
-            ...state,
-            playlist: {
-              ...state.playlist,
-              snapshotId: res.snapshot_id,
-              songs: state.playlist.songs.filter(song => song.id !== track.id)
-            }
-          })
-        );
+        if (res) {
+          setAuthUser(state => 
+            ({
+              ...state,
+              playlist: {
+                ...state.playlist,
+                snapshotId: res.snapshot_id,
+                songs: state.playlist.songs.filter(song => song.id !== track.id)
+              }
+            })
+          );
+        } else {
+          console.log('It was not possible to remove song from playlist');
+        }
       } catch (error) {
-        console.log('It was not possible to remove song from playlist');
+        console.log('It was not possible to remove song from playlist', error);
       }
     }
   }, [playlistChange]);

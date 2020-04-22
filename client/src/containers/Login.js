@@ -28,7 +28,7 @@ function Login () {
   
   //update authentication and user contexts
   setAuthToken(token);
-  setAuthUser(user => ( { ...user, userId, playlist: { ...user.playlist, playlistId } } ));
+  setAuthUser(user => ( { ...user, userId, displayName, playlist: { ...user.playlist, playlistId } } ));
   
   //save session at local storage
   localStorage.setItem('token', token);
