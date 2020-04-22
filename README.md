@@ -37,3 +37,4 @@ To start the client go to './client' folder and run ```npm start```. A browser s
 ## Important
 
 A Spotify Premium account is necessary in order to use the app's features.
+It is a work in progress, there are still many things to solve and to implement in order to have a consistent app.
