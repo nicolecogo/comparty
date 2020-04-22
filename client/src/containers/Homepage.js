@@ -19,7 +19,7 @@ function Homepage () {
     //TODO check if party code is correct (ask server)
     // const playlistId = ServerClient.findParty(partyCode);
     // if (playlistId)
-    if (partyCode === '123456qwerty') {
+    if (partyCode === process.env.REACT_APP_PARTYCODE) {
       localStorage.setItem('partyCode', partyCode);
       loginPage();
     } else setNotFoundMessage(true);
@@ -38,9 +38,6 @@ function Homepage () {
   }
 
   return (
-    authToken
-    ? <Redirect to="/user" />
-    : 
     <div className="Homepage">
       <div className="homepage-main">
         <div className="description">

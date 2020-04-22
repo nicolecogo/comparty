@@ -4,7 +4,6 @@ import { useAuth } from '../context/auth';
 import { useUser } from '../context/user';
 import { Redirect } from 'react-router-dom';
 
-
 //first entry point after authenticating from server
 //retrieves all info passed through http parameters
 function Login () {
@@ -14,13 +13,14 @@ function Login () {
   const token = new URLSearchParams(useLocation().search).get('token');
   const userId = new URLSearchParams(useLocation().search).get('user');
   const displayName = new URLSearchParams(useLocation().search).get('displayName');
-  const partyCode = localStorage.getItem('partyCode');
+  let partyCode = localStorage.getItem('partyCode');
   // let playlistId;
   //TODO if there is no party code, create a new party if user doesn't have any
   // if(!partyCode) {playlistId, partyCode} = ServerClient.createOrRetrieveParty(userId);
+  if(!partyCode) partyCode = process.env.REACT_APP_PARTYCODE;
   //TODO if there is a party code, subscribe user to it
   // else playlistId = ServerClient.subscribeToParty(userId, partyCode);
-  const playlistId = '0ZG19BTfYVGL05tYaH1CfM';
+  const playlistId = process.env.REACT_APP_PLAYLIST_ID;
   
   if (!token) return (<Redirect to="/" />);
   if (!userId) return (<Redirect to="/" />);
