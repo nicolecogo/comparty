@@ -1,11 +1,11 @@
-### Comparty
+# Comparty
 
 This is an app that allows people to play songs together. The playback is synchronized between users, each listening in its own device, and every user can control and manipulate the playlist.
 
-# Home page
+## Home page
 ![wireframe](readme-images/Homepage.JPG)
 
-# User page
+## User page
 ![wireframe](readme-images/Userpage.JPG)
 
 The app is comprised of a back-end and a front-end, 'server' and 'client' folders, respectively.
@@ -17,19 +17,19 @@ Through the framework Socket.io it is possible to send information on playback a
 
 ## Running the app
 
-# Installing dependencies
+### Installing dependencies
 
 Run ```npm install``` to install dependencies.
 
-# Configurations
+### Configurations
 
 Both server and client need configuration files .env in its corresponding folders. An example.env configuration file is available in each folder with instructions of the required variables (they should be renamed to .env).
 
-# Starting server
+### Starting server
 
 To start the server go to './server' folder and run ```npm start```
 
-# Starting client
+### Starting client
 
 To start the client go to './client' folder and run ```npm start```. A browser should open with the app.
 
