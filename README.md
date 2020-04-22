@@ -3,10 +3,10 @@
 This is an app that allows people to play songs together. The playback is synchronized between users, each listening in its own device, and every user can control and manipulate the playlist.
 
 # Home page
-![wireframe](readme-images/Homepage.jpg)
+![wireframe](readme-images/Homepage.JPG)
 
 # User page
-![wireframe](readme-images/Userpage.jpg)
+![wireframe](readme-images/Userpage.JPG)
 
 The app is comprised of a back-end and a front-end, 'server' and 'client' folders, respectively.
 The back-end was developed with Node Express, and the front-end in React.
