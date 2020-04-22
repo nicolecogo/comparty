@@ -55,7 +55,8 @@ function PlayerTab () {
     console.log('playback.currentTrack.songURI', playback.currentTrack.songURI);
     console.log('playback.progress', playback.progress);
     console.log('timestamp', timestamp);
-    progress += Date.now() - timestamp;
+    progress += Date.now() - timestamp + 1000;
+    console.log('updated progress', progress);
     try {
       switch (action) {
         case 'play':
