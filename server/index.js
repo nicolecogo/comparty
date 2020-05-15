@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('hello', 'holaa');
   console.log('user connected');
   //TODO get code from session
-  const partyCode = '123456qwerty';
+  const partyCode = process.env.PARTYCODE;
   //listen for changes on playlist
   socket.on(`from:${partyCode}:updatePlaylist`, (updatedPlaylist) => {
     console.log('updated playlist', updatedPlaylist);

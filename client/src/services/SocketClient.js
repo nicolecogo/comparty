@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import ServerClient from './ServerClient';
 
 class SocketClient {
-  static partyCode = '123456qwerty';
+  static partyCode = process.env.REACT_APP_PARTYCODE;
 
   //connect to socket
   static socket = io(ServerClient._BASE_URL);
