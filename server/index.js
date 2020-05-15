@@ -32,28 +32,25 @@ app.use(passport.session());
 app.use(router);
 
 const server = app.listen(PORT, (err) => {
-  if (err) console.log(err);
-  else console.log(`Server listening at ${SERVER_URL}:${PORT}`);
+  if (err) console.log(err); //eslint-disable-line no-console
+  else console.log(`Server listening at ${SERVER_URL}:${PORT}`); //eslint-disable-line no-console
 });
 
 const io = require('socket.io').listen(server);
 
 io.on('connection', (socket) => {
-  socket.broadcast.emit('hello', 'holaa');
-  console.log('user connected');
+  console.log('user connected'); //eslint-disable-line no-console
   //TODO get code from session
   const partyCode = process.env.PARTYCODE;
   //listen for changes on playlist
   socket.on(`from:${partyCode}:updatePlaylist`, (updatedPlaylist) => {
-    console.log('updated playlist', updatedPlaylist);
     socket.broadcast.emit(`from:${partyCode}:updatePlaylist`, updatedPlaylist);
   });
   //listen for changes on playback
   socket.on(`from:${partyCode}:updatePlayback`, (updatedPlayback) => {
-    console.log('updated playback', updatedPlayback);
     socket.broadcast.emit(`from:${partyCode}:updatePlayback`, updatedPlayback);
   });
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('user disconnected'); //eslint-disable-line no-console
   });
 });
