@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import ServerClient from '../services/ServerClient';
-import { useAuth } from '../context/auth';
-import { Redirect } from 'react-router-dom';
 
 function Homepage () {
 
@@ -9,16 +7,14 @@ function Homepage () {
   const [ notFoundMessage, setNotFoundMessage ] = useState(false);
   const [ partyCode, setPartyCode ] = useState('');
 
-  const { authToken } =  useAuth();
-
   function showCodeInput () {
     setJoiningParty(true);
   }
 
   function joinParty () {
     //TODO check if party code is correct (ask server)
-    // const playlistId = ServerClient.findParty(partyCode);
-    // if (playlistId)
+    //TODO const playlistId = ServerClient.findParty(partyCode);
+    //TODO if (playlistId)
     if (partyCode === process.env.REACT_APP_PARTYCODE) {
       localStorage.setItem('partyCode', partyCode);
       loginPage();
