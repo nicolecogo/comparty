@@ -15,15 +15,13 @@ A few things you have to take in consideration before using Comparty.
 
 The repository contains both Comparty's [server](https://github.com/nicolecogo/comparty/tree/master/server) and [client](https://github.com/nicolecogo/comparty/tree/master/client). You'll need to install Comparty server first, and then set up Comparty client.
 
-### Installation
-
-#### Clone the repo
+### Clone the repo
 ```
 git clone https://github.com/nicolecogo/comparty
 cd comparty
 ```
 
-#### Setup server
+### Setup server
 1. Install dependencies
 ```
 cd server
@@ -52,37 +50,37 @@ http://localhost/3001/login/callback
 
 3. And you are set with the server! You can now run it with ```npm run```
 
-#### Setup client
+### Setup client
 1. Install dependencies
 ```
 cd client
 npm install
 ```
 
-2. Setup configuration file
+2. Setup configuration file. For the client you'll need to provide a Spotify collaborative playlist id in the ```.env``` file.
 ```
 cp example.env .env
 ```
-For the client you'll also need to provide a Spotify Client ID aswell as a Client secret in the ```.env``` file. If you didn't follow the instructions on [server setup](#Setup-client) for getting Spotify credentials, please do so now (this time, copy your <b>Client ID</b> and <b>Client Secret</b> and paste them to the ```.env``` file on the client).
 
 3. You are set with the client and good to go! Just run ```npm run``` and a browser should open with the app. Since the idea here is to synchronize playbacks between at least two clients, just copy the URI in another browser and have fun!
+
+<b>Important note:</b> A Spotify Premium account is required in order to use the app's features.
 
 
 ## Built with
 
 <b>Front-end</b>
-* [React](https://reactjs.org/) - Javascript library for building user interfaces.
+* [React](https://reactjs.org/)
 
 <b>Back-end</b>
-* [Node.js](https://nodejs.org/en/) - JavaScript runtime environment that executes JavaScript code outside of a web browser.
-* [Express](https://expressjs.com/) - Web Framework for Node.js.
-* [Socket.io](https://socket.io/) - Javascript library that enables real-time, bidirectional and event-based communication.
+* [Node.js](https://nodejs.org/en/)
+* [Express](https://expressjs.com/)
+* [Socket.io](https://socket.io/)
 
 <b>Services</b>
-* [Spotify Web API](https://developer.spotify.com/documentation/web-api/) - REST API that returns JSON metadata about music artists, albums, and tracks, directly from the Spotify Data Catalogue.
-* [Spotify Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk/) - Client-side JavaScript library which allows the creation of a new player in Spotify Connect and play any audio track from Spotify in the browser via Encrypted Media Extensions.
+* [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+* [Spotify Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk/)
 
-<b>Important note:</b> A Spotify Premium account is required in order to use the app's features.
 
 ## Observations
 It is a work in progress, there are still a lot of room for improvement and features that would be awesome to have implemented.
