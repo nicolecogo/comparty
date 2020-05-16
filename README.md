@@ -49,7 +49,6 @@ http://localhost/3001/login/callback
 ```
 
 </details>
-<br>
 
 3. And you are set with the server! You can now run it with ```npm run```
 
@@ -64,7 +63,7 @@ npm install
 ```
 cp example.env .env
 ```
-For the client you'll also need to provide a Spotify Client ID aswell as a Client secret in the ```.env``` file. If you didn't follow these instructions for getting Spotify credentials, please do so now (this time, copy your <b>Client ID</b> and <b>Client Secret</b> and paste them to the ```.env``` file on the client).
+For the client you'll also need to provide a Spotify Client ID aswell as a Client secret in the ```.env``` file. If you didn't follow the instructions on [server setup](#Setup-client) for getting Spotify credentials, please do so now (this time, copy your <b>Client ID</b> and <b>Client Secret</b> and paste them to the ```.env``` file on the client).
 
 3. You are set with the client and good to go! Just run ```npm run``` and a browser should open with the app. Since the idea here is to synchronize playbacks between at least two clients, just copy the URI in another browser and have fun!
 
@@ -75,12 +74,12 @@ For the client you'll also need to provide a Spotify Client ID aswell as a Clien
 * [React](https://reactjs.org/) - Javascript library for building user interfaces.
 
 <b>Back-end</b>
-* [Node.js](https://nodejs.org/en/) - JavaScript runtime environment that executes JavaScript code outside of a web browser. Used to create the server.
+* [Node.js](https://nodejs.org/en/) - JavaScript runtime environment that executes JavaScript code outside of a web browser.
 * [Express](https://expressjs.com/) - Web Framework for Node.js.
-* [Socket.io](https://socket.io/) - Javascript library that enables real-time, bidirectional and event-based communication. Applied for sending information on playback and playlists modifications and status from one client to the other (through the server).
+* [Socket.io](https://socket.io/) - Javascript library that enables real-time, bidirectional and event-based communication.
 
 <b>Services</b>
-* [Spotify Web API](https://developer.spotify.com/documentation/web-api/) - REST API that returns JSON metadata about music artists, albums, and tracks, directly from the Spotify Data Catalogue. Used to receive information on the playlist and the playback, and to send commands.
+* [Spotify Web API](https://developer.spotify.com/documentation/web-api/) - REST API that returns JSON metadata about music artists, albums, and tracks, directly from the Spotify Data Catalogue.
 * [Spotify Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk/) - Client-side JavaScript library which allows the creation of a new player in Spotify Connect and play any audio track from Spotify in the browser via Encrypted Media Extensions.
 
 <b>Important note:</b> A Spotify Premium account is required in order to use the app's features.
