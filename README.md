@@ -83,14 +83,14 @@ cp example.env .env
 
 
 ## Observations
-It is a work in progress, there are still a lot of room for improvement and features that would be awesome to have implemented.
+It is a work in progress, there is still a lot of room for improvement and features that would be awesome to have.
 
 #### Room for improvement
 * It is not the ideal to have to provide the playlist id in the environment file, so the first thing necessary to implement is an endpoint for creating a default Comparty playlist.
 * In order to make it work for multiple clients through a party code, we need to implement a Database to store playlist and party code information for each user.
 * The Spotify token provided through OAuth authentication have an expiration time, so it would be more effective to require a new token automatically from the client in order to keep the session alive.
 * The app handles many asynchronous states due to its nature (having event listeners from the Web Playback SDK aswell as the Sockets'). It would be optimal to have those handled by Redux, adding more consistency accross app's features.
-* Socket.io makes it very easy to communicate between many clients, so it would be good to make good use of its functionalities and create namespaces for each party.
+* Socket.io makes it very easy to communicate between many clients, so it would be wise to make good use of its functionalities and create namespaces for each party.
 
 #### Future features
 * For making it more interactive and personal we need to allow users to chat, through a *web chat* and *video/audio calls*.
